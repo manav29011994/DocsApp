@@ -44,8 +44,17 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         List<DataToUI> data = new ArrayList<>();
-        mAdapter = new MessagesDetailAdapter(MainActivity.this, data);
-        recyclerView.setAdapter(mAdapter);
+        if(App.get().getDB().chatDao().getAll()!=null) {
+            data.addAll(App.get().getDB().chatDao().getAll());
+            mAdapter = new MessagesDetailAdapter(MainActivity.this, data);
+            recyclerView.setAdapter(mAdapter);
+            mAdapter = new MessagesDetailAdapter(MainActivity.this, data);
+            recyclerView.setAdapter(mAdapter);
+            recyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+        }else {
+            mAdapter = new MessagesDetailAdapter(MainActivity.this, data);
+            recyclerView.setAdapter(mAdapter);
+        }
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
                     dataToUI.setIs_bot_chat(false);
                     updateAdapter(dataToUI);
                     sendMessage(dataToUI);
+                    DataToUI offlineChatRecord=new DataToUI();
+                    offlineChatRecord.setData(editText.getText().toString());
+                    offlineChatRecord.setIs_bot_chat(false);
+                    App.get().getDB().chatDao().insertChat(offlineChatRecord);
                     editText.setText("");
                 } else {
                     Toast.makeText(MainActivity.this, "please enter some text", Toast.LENGTH_SHORT).show();
@@ -78,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
                         DataToUI dataToUI = new DataToUI();
                         dataToUI.setData(mainMessageData.getMessage().getMessage());
                         dataToUI.setIs_bot_chat(true);
+                        DataToUI offlineChatRecord=new DataToUI();
+                        offlineChatRecord.setData(mainMessageData.getMessage().getMessage());
+                        offlineChatRecord.setIs_bot_chat(true);
+                        App.get().getDB().chatDao().insertChat(offlineChatRecord);
                         updateAdapter(dataToUI);
                     }
                 }

@@ -1,17 +1,12 @@
 package com.viralandroid.chartmessangingappui;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 
 @Entity
-public class DataToUI {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-    @ColumnInfo(name = "data")
+public class OfflineChatRecord {
     private String data;
-    @ColumnInfo(name = "is_bot_chat")
     private boolean is_bot_chat;
+    private String StringchatBotID;
 
     public String getData() {
         return data;
@@ -29,20 +24,20 @@ public class DataToUI {
         this.is_bot_chat = is_bot_chat;
     }
 
-    public int getId() {
-        return id;
+    public String getStringchatBotID() {
+        return StringchatBotID;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setStringchatBotID(String stringchatBotID) {
+        StringchatBotID = stringchatBotID;
     }
 
     @Override
     public String toString() {
-        return "DataToUI{" +
-                "id=" + id +
-                ", data='" + data + '\'' +
+        return "OfflineChatRecord{" +
+                "data='" + data + '\'' +
                 ", is_bot_chat=" + is_bot_chat +
+                ", StringchatBotID='" + StringchatBotID + '\'' +
                 '}';
     }
 }
