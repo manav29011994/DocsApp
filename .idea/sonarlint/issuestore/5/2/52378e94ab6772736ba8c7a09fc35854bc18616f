@@ -1,0 +1,5 @@
+
+msquid:S00100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œÅ‡€8ÉÉŠ«¯-
+rsquid:S00100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(þõ¥ðýÿÿÿÿ8ÉÉŠ«¯-
+zsquid:S00116"VRename this field "is_bot_chat" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(´ß¿âøÿÿÿÿ8ÉÉŠ«¯-
+usquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(þõ¥ðýÿÿÿÿ8ÉÉŠ«¯-

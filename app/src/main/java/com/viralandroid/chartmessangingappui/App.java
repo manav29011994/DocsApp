@@ -24,6 +24,7 @@ public class App extends Application {
 
         // create database
         database = Room.databaseBuilder(getApplicationContext(), MyDatabase.class, DATABASE_NAME).allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
                 .build();
 
         INSTANCE = this;

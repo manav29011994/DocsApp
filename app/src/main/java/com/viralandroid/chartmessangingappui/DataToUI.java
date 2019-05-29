@@ -12,6 +12,9 @@ public class DataToUI {
     private String data;
     @ColumnInfo(name = "is_bot_chat")
     private boolean is_bot_chat;
+    @ColumnInfo(name = "externalId")
+    private String externalId;
+
 
     public String getData() {
         return data;
@@ -37,12 +40,21 @@ public class DataToUI {
         this.id = id;
     }
 
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
     @Override
     public String toString() {
         return "DataToUI{" +
                 "id=" + id +
                 ", data='" + data + '\'' +
                 ", is_bot_chat=" + is_bot_chat +
+                ", externalId='" + externalId + '\'' +
                 '}';
     }
 }

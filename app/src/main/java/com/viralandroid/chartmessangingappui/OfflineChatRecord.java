@@ -1,12 +1,9 @@
 package com.viralandroid.chartmessangingappui;
 
-import android.arch.persistence.room.Entity;
-
-@Entity
 public class OfflineChatRecord {
     private String data;
     private boolean is_bot_chat;
-    private String StringchatBotID;
+    private String externalID;
 
     public String getData() {
         return data;
@@ -24,12 +21,12 @@ public class OfflineChatRecord {
         this.is_bot_chat = is_bot_chat;
     }
 
-    public String getStringchatBotID() {
-        return StringchatBotID;
+    public String getExternalID() {
+        return externalID;
     }
 
-    public void setStringchatBotID(String stringchatBotID) {
-        StringchatBotID = stringchatBotID;
+    public void setExternalID(String externalID) {
+        this.externalID = externalID;
     }
 
     @Override
@@ -37,7 +34,7 @@ public class OfflineChatRecord {
         return "OfflineChatRecord{" +
                 "data='" + data + '\'' +
                 ", is_bot_chat=" + is_bot_chat +
-                ", StringchatBotID='" + StringchatBotID + '\'' +
+                ", externalID='" + externalID + '\'' +
                 '}';
     }
 }

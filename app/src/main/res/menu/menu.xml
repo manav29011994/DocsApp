@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/iconHamburger"
+        android:icon="@drawable/ic_ham"
+        app:showAsAction="ifRoom|withText"
+        android:title="Other">
+        <menu>
+            <item
+                android:icon="@drawable/user_pratikshya"
+                android:id="@+id/menuItemSettingsicon"
+                android:onClick="ChatScreen1"
+                android:title="Chat 1"></item>
+            <item
+                android:icon="@drawable/user_pratikshya"
+                android:id="@+id/menuItemWebsite"
+                android:onClick="ChatScreen2"
+                android:title="Chat 2"></item>
+            <item
+                android:icon="@drawable/user_pratikshya"
+                android:id="@+id/menuItemBugReporting"
+                android:onClick="ChatScreen3"
+                android:title="Chat 3"></item>
+
+        </menu>
+
+    </item>
+</menu>
