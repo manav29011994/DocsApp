@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         chatFragment.setArguments(bundle);
         fragmentTransaction.add(R.id.fragment_container, chatFragment, "HELLO");
         fragmentTransaction.commit();
-
     }
 
     @Override
@@ -72,4 +71,5 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, chatFragment, "HELLO");
         fragmentTransaction.commit();
     }
+
 }

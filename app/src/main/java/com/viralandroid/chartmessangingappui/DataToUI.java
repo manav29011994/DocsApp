@@ -14,6 +14,8 @@ public class DataToUI {
     private boolean is_bot_chat;
     @ColumnInfo(name = "externalId")
     private String externalId;
+    @ColumnInfo(name = "chatResponseFetched")
+    private boolean chatResponseFetched ;
 
 
     public String getData() {
@@ -48,6 +50,14 @@ public class DataToUI {
         this.externalId = externalId;
     }
 
+    public boolean isChatResponseFetched() {
+        return chatResponseFetched;
+    }
+
+    public void setChatResponseFetched(boolean chatResponseFetched) {
+        this.chatResponseFetched = chatResponseFetched;
+    }
+
     @Override
     public String toString() {
         return "DataToUI{" +
@@ -55,6 +65,7 @@ public class DataToUI {
                 ", data='" + data + '\'' +
                 ", is_bot_chat=" + is_bot_chat +
                 ", externalId='" + externalId + '\'' +
+                ", chatResponseFetched=" + chatResponseFetched +
                 '}';
     }
 }

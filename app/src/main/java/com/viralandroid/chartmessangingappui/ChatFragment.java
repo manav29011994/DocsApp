@@ -1,6 +1,10 @@
 package com.viralandroid.chartmessangingappui;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment implements ConnectionLostCallback {
 
     private RecyclerView recyclerView;
     private MessagesDetailAdapter mAdapter;
@@ -30,6 +34,7 @@ public class ChatFragment extends Fragment {
     ProgressBar progressBar;
     String chatName;
     String botName;
+    private BroadcastReceiver mNetworkReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +51,7 @@ public class ChatFragment extends Fragment {
 
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        mNetworkReceiver=new ConnectivityChangeReceiver(this);
 
         final List<DataToUI> data = new ArrayList<>();
         if (App.get().getDB().chatDao().getAll(chatName, botName) != null) {
@@ -65,6 +71,7 @@ public class ChatFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DataToUI offlineChatRecord = null;
                 if (Util.haveNetworkConnection(getActivity())) {
                     if (!TextUtils.isEmpty(editText.getText().toString())) {
                         DataToUI dataToUI = new DataToUI();
@@ -72,20 +79,32 @@ public class ChatFragment extends Fragment {
                         dataToUI.setIs_bot_chat(false);
                         updateAdapter(dataToUI);
                         sendMessage(dataToUI);
-                        DataToUI offlineChatRecord = new DataToUI();
-                        offlineChatRecord.setData(editText.getText().toString());
-                        offlineChatRecord.setIs_bot_chat(false);
-                        offlineChatRecord.setExternalId(chatName);
-                        App.get().getDB().chatDao().insertChat(offlineChatRecord);
-                        editText.setText("");
                     } else {
                         Toast.makeText(getActivity(), "please enter some text", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                    offlineChatRecord = new DataToUI();
+                    offlineChatRecord.setData(editText.getText().toString());
+                    offlineChatRecord.setIs_bot_chat(false);
+                    offlineChatRecord.setExternalId(chatName);
+                    offlineChatRecord.setChatResponseFetched(true);
                 } else {
-
+                    DataToUI dataToUI = new DataToUI();
+                    dataToUI.setData(editText.getText().toString());
+                    dataToUI.setIs_bot_chat(false);
+                    updateAdapter(dataToUI);
+                    offlineChatRecord = new DataToUI();
+                    offlineChatRecord.setData(editText.getText().toString());
+                    offlineChatRecord.setIs_bot_chat(false);
+                    offlineChatRecord.setExternalId(chatName);
+                    offlineChatRecord.setChatResponseFetched(false);
                 }
+                editText.setText("");
+                App.get().getDB().chatDao().insertChat(offlineChatRecord);
+
             }
         });
+        registerNetworkBroadcastForNougatAndAbove();
         return v;
     }
 
@@ -111,6 +130,7 @@ public class ChatFragment extends Fragment {
                         offlineChatRecord.setData(mainMessageData.getMessage().getMessage());
                         offlineChatRecord.setIs_bot_chat(true);
                         offlineChatRecord.setExternalId(botName);
+                        offlineChatRecord.setChatResponseFetched(true);
                         App.get().getDB().chatDao().insertChat(offlineChatRecord);
                         updateAdapter(dataToUI);
                     }
@@ -131,4 +151,39 @@ public class ChatFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void reconnected() {
+        List<DataToUI> data = App.get().getDB().chatDao().getAllOffline(chatName, false);
+        if (data != null && data.size() > 0) {
+            for (int i = 0; i<data.size(); i++) {
+                if (!TextUtils.isEmpty(data.get(i).getData())) {
+                    App.get().getDB().chatDao().update(true,data.get(i).getId());
+                    sendMessage(data.get(i));
+                }
+            }
+        }
+    }
+
+    private void registerNetworkBroadcastForNougatAndAbove() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            getActivity().registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getActivity().registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
+
+    protected void unregisterNetworkChanges() {
+        try {
+            getActivity().unregisterReceiver(mNetworkReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unregisterNetworkChanges();
+    }
 }
